@@ -7,3 +7,9 @@
 [submodule "components/ota"]
 	path = components/ota
 	url = git@github.com:willson556/esp32-simple-ota.git
+[submodule "components/avr-2807"]
+	path = components/avr-2807
+	url = git@github.com:willson556/avr-2807.git
+[submodule "components/cec"]
+	path = components/cec
+	url = git@github.com:willson556/CEC.git
