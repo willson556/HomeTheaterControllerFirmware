@@ -12,12 +12,7 @@
 #include "nvs_flash.h"
 
 #include "config.h"
-
 #include "udp_logging.h"
-
-#include "OvenController.hpp"
-#include "OvenControllerHomeKitBridge.hpp"
-
 #include "esp32_simple_ota.hpp"
 
 #define TAG "Main"
@@ -26,30 +21,13 @@
 static EventGroupHandle_t wifi_event_group;
 const int WIFI_CONNECTED_BIT = BIT0;
 
-constexpr gpio_num_t bakeButton = GPIO_NUM_16;
-constexpr gpio_num_t startButton = GPIO_NUM_19;
-constexpr gpio_num_t incrementButton = GPIO_NUM_25;
-constexpr gpio_num_t decrementButton = GPIO_NUM_32;
-constexpr gpio_num_t cancelButton = GPIO_NUM_33;
-constexpr gpio_num_t bakeCoilSense = GPIO_NUM_5;
-
-static OvenController ovenController {
-    bakeButton,
-    startButton,
-    incrementButton,
-    decrementButton,
-    cancelButton,
-    bakeCoilSense,
-    "OvenController"
-};
-
 constexpr unsigned updateInterval = 10; // seconds
 static esp32_simple_ota::OTAManager ota {
     MAIN_UPDATE_FEED_URL,
     CURRENT_VERSION,
     updateInterval,
-    [](){ ovenController.turnOff(); },
-    [](){ return ovenController.getCurrentState() == OvenController::State::Off; }
+    [](){  },
+    [](){ return true; }
 };
 
 static void network_logging_init(const char *ip)
@@ -59,17 +37,17 @@ static void network_logging_init(const char *ip)
     ESP_LOGI(TAG, "Device IP Address: %s", ip);
 }
 
-static void hap_oven_initialize(uint8_t *mac)
+static void hap_ht_initialize(uint8_t *mac)
 {
     constexpr size_t id_buffer_size = 32;
     char accessory_id[id_buffer_size] = { 0 };
     snprintf(accessory_id, id_buffer_size, "%02X:%02X:%02X:%02X:%02X:%02X", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     
     static std::string id {accessory_id};    
-    static OvenControllerHomeKitBridge homekit_oven_controller { id, ovenController };
+    // static OvenControllerHomeKitBridge homekit_oven_controller { id, ovenController };
 
-    ovenController.initialize();
-    homekit_oven_controller.register_accessory();
+    // ovenController.initialize();
+    // homekit_oven_controller.register_accessory();
 }
 
 static esp_err_t event_handler(void *ctx, system_event_t *event)
@@ -89,7 +67,7 @@ static esp_err_t event_handler(void *ctx, system_event_t *event)
             esp_wifi_get_mac(ESP_IF_WIFI_STA, mac);
 
             ota.launchTask();
-            hap_oven_initialize(mac);
+            hap_ht_initialize(mac);
         }
         break;
     }
