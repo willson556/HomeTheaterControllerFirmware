@@ -15,6 +15,8 @@
 #include "udp_logging.h"
 #include "esp32_simple_ota.hpp"
 
+#include "ESPSerial.hpp"
+
 #define TAG "Main"
 
 /* FreeRTOS event group to signal when we are connected & ready to make a request */
