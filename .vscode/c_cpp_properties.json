@@ -6,6 +6,7 @@
             "intelliSenseMode": "gcc-x64",
             "cStandard": "c11",
             "cppStandard": "c++17",
+            "compilerPath": "${env:IDF_TOOLCHAIN}/bin/xtensa-esp32-elf-g++",
             "includePath": [
                 "build/include",
                 "${env:IDF_TOOLCHAIN}/lib/gcc/xtensa-esp32-elf/5.2.0/include"

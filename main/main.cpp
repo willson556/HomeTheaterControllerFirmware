@@ -15,6 +15,7 @@
 #include "udp_logging.h"
 #include "esp32_simple_ota.hpp"
 
+#include "SystemController.hpp"
 #include "ESPSerial.hpp"
 
 #define TAG "Main"
